@@ -1,0 +1,19 @@
+{
+  "name": "assembler_compiler",
+  "version": "1.0.0",
+  "description": "Assembler compiler",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arturnista/AssemblerCompiler.git"
+  },
+  "author": "Artur Morelle Nista",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arturnista/AssemblerCompiler/issues"
+  },
+  "homepage": "https://github.com/arturnista/AssemblerCompiler#readme"
+}
