@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset-utf-8">
+    <meta name="viewport" content="width-devide-width, initial-scale-1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <title>Assembler Compiler</title>
+    <style type="text/css">
+      .margin-top{
+        margin-top: 30px;
+      }
+      #bCompile{
+        margin-top: 5px;
+      }
+      textarea {
+        resize: vertical;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="jumbotron container-fluid">
+      <div class="row">
+        <div class="col-md-8">
+          <div id="dTable">
+            <label for="iTaxArea">Assembler code:</label>
+            <textarea class="form-control" rows="15" id="iTaxArea"></textarea>
+          </div>
+          <button type="button" id="bCompile" class="btn btn-success pull-right" onclick="fnCompile()">Success</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="margin-top">
+            <table  id="tTable" class="table table-striped">
+              <tr>
+                <th> Assembly </th>
+                <th> Binário </th>
+                <th> Hexadecimal </th>
+              </tr>
+              <tr>
+                <td> add $s0, $t1, $t2 </td>
+                <td> 00000000000000000000000000000000 </td>
+                <td> 00000000000000000000000000000000 </td>
+              </tr>
+              <tr>
+                <td> add $s0, $t1, $t2 </td>
+                <td> 00000000000000000000000000000000 </td>
+                <td> 00000000000000000000000000000000 </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    function fnCompile() {
+      var assemblerCode = $("#iTaxArea").val().split("\n");
+      assemblerCode.remove
+      for (var i = 0; i < assemblerCode.length; i++) {
+        $("#tTable").append(fnBuildTableItem(assemblerCode[i]));
+      }
+    }
+    function fnBuildTableItem(item) {
+      var ini = "<tr>"
+      var fin = "<tr>"
+      var it = "<td>"
+      var ft = "</td>"
+      return ini + it + item + ft + fin;
+    }
+  </script>
+</html>

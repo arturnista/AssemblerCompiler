@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/arturnista/AssemblerCompiler/issues"
   },
-  "homepage": "https://github.com/arturnista/AssemblerCompiler#readme"
+  "homepage": "https://github.com/arturnista/AssemblerCompiler#readme",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "ejs": "^2.4.2",
+    "express": "^4.13.4"
+  }
 }
