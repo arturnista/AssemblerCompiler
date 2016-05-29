@@ -6,9 +6,10 @@ var labels = [];
 exports.compile = function (data, fnCallback) {
     createLabels(data);
     result = {
-        data: []
-    }
-    var error = [];
+        data: [],
+        warning: [],
+        error: []
+    };
     for (var i = 0; i < data.length; i++) {
         try{
             var oriLine = data[i].line;
@@ -21,13 +22,16 @@ exports.compile = function (data, fnCallback) {
             var line = interpretLine(data[i].line);
             result.data.push(line);
         } catch(err){
-            error.push({
+            result.error.push({
                 mess: err,
                 line: i+1
             })
         }
     }
-    fnCallback(result, error);
+
+    labelsNotUsed();
+
+    fnCallback(result);
 }
 
 createLabels = function(data){
@@ -39,7 +43,8 @@ createLabels = function(data){
             var line = i + 1;
             labels.push({
                 name: label,
-                line: line
+                line: line,
+                used: false
             });
         }
     }
@@ -52,6 +57,27 @@ findLabel = function(label){
         }
     }
     throw "Label '" + label + "' não existente.";
+}
+
+useLabel = function(label){
+    for (var i = 0; i < labels.length; i++) {
+        if(label === labels[i].name){
+            labels[i].used = true;
+            return;
+        }
+    }
+    throw "Label '" + label + "' não existente.";
+}
+labelsNotUsed = function(){
+    var ret = []
+    for (var i = 0; i < labels.length; i++) {
+        if(!labels[i].used){
+            result.warning.push({
+                mess: "Label não usado: " + labels[i].name,
+                line: labels[i].line
+            });
+        }
+    }
 }
 
 interpretLine = function(line){
@@ -166,6 +192,7 @@ iFuncInterpretJump = function(set, addFunc){
     var line;
     try{
         line = findLabel(addFunc[3]);
+        useLabel(addFunc[3])
     } catch(err){
         throw (err);
     }

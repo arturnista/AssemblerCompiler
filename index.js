@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
-var compiler = require('./controllers/compiler.js');
+var compiler = require('./controllers/compiler/core.js');
 
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
@@ -16,8 +16,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/compiler', function (req, res) {
-    compiler.compile(req.body.code, function(result, err){
-        result.error = err;
+    compiler.compile(req.body.code, function(result){
         res.send(result);
     });
 });

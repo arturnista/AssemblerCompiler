@@ -42,7 +42,8 @@ j 2500</textarea>
       </div>
       <div class="row">
         <div class="col-md-8 margin-top">
-          <div class="alert alert-danger" role="alert" id="errorAlert"> </div>
+          <div class="alert alert-danger" role="alert" id="errorAlert"></div>
+          <div class="alert alert-warning" role="alert" id="warningAlert"></div>
         </div>
       </div>
       <div class="row">
@@ -67,6 +68,7 @@ j 2500</textarea>
   </body>
   <script type="text/javascript">
     $("#errorAlert").hide();
+    $("#warningAlert").hide();
     $("#tTable").hide();
     function fnCompile() {
       var assemblerCode = $("#iTaxArea").val().split("\n");
@@ -82,22 +84,29 @@ j 2500</textarea>
         data: data,
         url: '/compiler',            
         success: function(result) {
-          $("#errorAlert").html("");
-          if(result.error.length !== 0){
-            for (var i = 0; i < result.error.length; i++) {
-              $("#errorAlert").html($("#errorAlert").html() + (i!=0?"<br/>":"") + "Linha " + result.error[i].line + " : " + result.error[i].mess);
-            }
-            $("#errorAlert").show();
-          } else {
-            $("#errorAlert").hide();
-          }
+          fnAlert("#errorAlert", result.error, "Errors:");
+          fnAlert("#warningAlert", result.warning, "Warnings:");
+
           fnAppendResultToTable(result);
         }
       });
     }
+    function fnAlert(id, data, initialText){
+      if(data.length !== 0){
+        $(id).html(initialText);
+        for (var i = 0; i < data.length; i++) {
+          var er = data[i];
+          $(id).html($(id).html() + "<br/> Linha " + er.line + " : " + er.mess);
+        }
+        $(id).show();
+      } else {
+        $(id).hide();
+      }
+    }
 
     function fnAppendResultToTable(result){
       $("#tTable").show();
+      // Initialize table
       $("#tTableBody tr").remove();
       var code = result.data;
       for (var i = 0; i < code.length; i++) {
