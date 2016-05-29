@@ -63,7 +63,7 @@
       <div class="row">
         <div class="margin-top">
           <div class="btn-group">
-            <button type="button" class="btn btn-default" onclick="fnSampleText()">Sample text</button>
+            <button type="button" class="btn btn-default" onclick="fnSampleCode()">Sample code</button>
             <button type="button" class="btn btn-default" onclick="fnCleanCode()">Clean</button>
           </div>
           <textarea class="form-control" rows="15" id="iTaxArea"></textarea>
@@ -160,10 +160,10 @@
       $("#iTaxArea").val("");
     }
 
-    function fnSampleText(){
+    function fnSampleCode(){
       $.ajax({
         type: 'GET',
-        url: '/sampletext',            
+        url: '/samplecode',            
         success: function(result) {
           $("#iTaxArea").val(result.val);
         }

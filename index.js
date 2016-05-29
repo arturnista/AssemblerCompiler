@@ -19,7 +19,7 @@ app.get('/about', function (req, res) {
     res.render('about.html');
 });
 
-app.get('/sampletext', function (req, res) {
+app.get('/samplecode', function (req, res) {
     var txt = {}
     txt.val = "add $s0, $s1, $s2\n" + 
                "sub $t0, $t3, $t5\n" + 
