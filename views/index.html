@@ -32,20 +32,31 @@ sub $t0, $t3, $t5
 addi $s0, $s1, 5
 addi $t0, $s3, -12
 lw $t2, 32($0)
-sw $s1, 4($t1)</textarea>
+sw $s1, 4($t1)
+j 2500      </textarea>
           </div>
           <button type="button" id="bCompile" class="btn btn-success pull-right" onclick="fnCompile()">Success</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 margin-top">
+          <div class="alert alert-danger" role="alert" id="errorAlert"> </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-8">
           <div class="margin-top">
             <table id="tTable" class="table table-striped">
-              <tr>
-                <th> Assembly </th>
-                <th> Binário </th>
-                <th> Hexadecimal </th>
-              </tr>
+              <thead>
+                <tr>
+                  <th> Assembly </th>
+                  <th> Binário </th>
+                  <th> Hexadecimal </th>
+                </tr>
+              </thead>
+              <tbody id="tTableBody">
+                
+              </tbody>
             </table>
           </div>
         </div>
@@ -53,11 +64,13 @@ sw $s1, 4($t1)</textarea>
     </div>
   </body>
   <script type="text/javascript">
+    $("#errorAlert").hide();
+    $("#tTable").hide();
     function fnCompile() {
       var assemblerCode = $("#iTaxArea").val().split("\n");
-      data = {
-        code: []
-      };
+      data = {};
+      data.code = [];
+      
       for (var i = 0; i < assemblerCode.length; i++) {
         var aux = {line: assemblerCode[i]};
         data.code.push(aux);
@@ -66,16 +79,27 @@ sw $s1, 4($t1)</textarea>
         type: 'POST',
         data: data,
         url: '/compiler',            
-        success: function(data) {
-          fnAppendResultToTable(data);
+        success: function(result) {
+          $("#errorAlert").html("");
+          if(result.error.length !== 0){
+            for (var i = 0; i < result.error.length; i++) {
+              $("#errorAlert").html($("#errorAlert").html() + (i!=0?"<br/>":"") + "Linha " + result.error[i].line + " : " + result.error[i].mess);
+            }
+            $("#errorAlert").show();
+          } else {
+            $("#errorAlert").hide();
+          }
+          fnAppendResultToTable(result);
         }
       });
     }
 
     function fnAppendResultToTable(result){
+      $("#tTable").show();
+      $("#tTableBody tr").remove();
       var code = result.data;
       for (var i = 0; i < code.length; i++) {
-        $("#tTable").append(fnBuildTableItem(code[i]));
+        $("#tTableBody").append(fnBuildTableItem(code[i]));
       }
     }
     function fnBuildTableItem(item) {

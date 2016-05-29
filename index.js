@@ -16,7 +16,8 @@ app.get('/', function (req, res) {
 });
 
 app.post('/compiler', function (req, res) {
-    compiler.compile(req.body.code, function(result){
+    compiler.compile(req.body.code, function(result, err){
+        result.error = err;
         res.send(result);
     });
 });
