@@ -19,6 +19,20 @@ app.get('/about', function (req, res) {
     res.render('about.html');
 });
 
+app.get('/sampletext', function (req, res) {
+    var txt = {}
+    txt.val = "add $s0, $s1, $s2\n" + 
+               "sub $t0, $t3, $t5\n" + 
+               "addi $s0, $s1, 5\n" + 
+               "beq $s0, $s1, Label1\n" + 
+               "addi $t0, $s3, -12\n" + 
+               "lw $t2, 32($0)\n" + 
+               "sw $s1, 4($t1)\n" + 
+               ":Label1\n" + 
+               "j 2500";
+    res.send(txt);
+});
+
 app.get('/images/:image_name', function (req, res) {
     var imageName = req.params.image_name + ".png"
     res.sendFile(__dirname + "/images/" + imageName);

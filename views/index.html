@@ -11,6 +11,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <title>Assembler Compiler</title>
     <style type="text/css">
+      .align-center {
+        text-align: center;
+      }
       .margin-top{
         margin-top: 30px;
       }
@@ -27,6 +30,7 @@
     </style>
   </head>
   <body data-spy="scroll" data-target=".navbar-collapse">
+    <!-- Navbar -->
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -49,30 +53,39 @@
         </div>
     </div>
     <div class="jumbotron container-fluid">
-      <div class="row">
-        <div class="margin-top">
-          <label for="iTaxArea">Assembler code:</label>
-          <textarea class="form-control" rows="15" id="iTaxArea">add $s0, $s1, $s2 
-sub $t0, $t3, $t5
-addi $s0, $s1, 5
-beq $s0, $s1, La
-addi $t0, $s3, -12
-lw $t2, 32($0)
-sw $s1, 4($t1)
-:La
-j 2500</textarea>
+      <!-- Header row -->
+      <div class="row align-center">
+        <div class="page-header">
+          <h1> Assembler Compiler </h1>
         </div>
-        <button type="button" id="bCompile" class="btn btn-success pull-right" onclick="fnCompile()">Success</button>
       </div>
-      <div class="row margin-top">
-        <div class="alert alert-danger" role="alert" id="errorAlert"></div>
-        <div class="alert alert-warning" role="alert" id="warningAlert"></div>
-      </div>
+      <!-- Input code row -->
       <div class="row">
         <div class="margin-top">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default" onclick="fnSampleText()">Sample text</button>
+            <button type="button" class="btn btn-default" onclick="fnCleanCode()">Clean</button>
+          </div>
+          <textarea class="form-control" rows="15" id="iTaxArea"></textarea>
+        </div>
+        <button type="button" id="bCompile" class="btn btn-success btn-lg btn-block" onclick="fnCompile()">Compile</button>
+      </div>
+      <!-- Error and Warning alerts row -->
+      <div class="row margin-top">
+        <div class="alert alert-danger" role="alert" id="errorAlert">
+          <strong> Errors: </strong>
+        </div>
+        <div class="alert alert-warning alert-dismissible" role="alert" id="warningAlert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong> Warnings: </strong>
+        </div>
+      </div>
+      <!-- Compiled code row -->
+      <div class="row compiledContainer">
+        <div class="table-responsive margin-top">
           <table id="tTable" class="table table-striped">
             <thead>
-              <tr>
+              <tr class="info">
                 <th> Assembly </th>
                 <th> Binário </th>
                 <th> Hexadecimal </th>
@@ -87,7 +100,9 @@ j 2500</textarea>
     </div>
   </body>
   <script type="text/javascript">
+    var errorInitialText = $("#errorAlert").html();
     $("#errorAlert").hide();
+    var warningInitialText = $("#warningAlert").html();
     $("#warningAlert").hide();
     $("#tTable").hide();
     function fnCompile() {
@@ -104,8 +119,8 @@ j 2500</textarea>
         data: data,
         url: '/compiler',            
         success: function(result) {
-          fnAlert("#errorAlert", result.error, "Errors:");
-          fnAlert("#warningAlert", result.warning, "Warnings:");
+          fnAlert("#errorAlert", result.error, errorInitialText);
+          fnAlert("#warningAlert", result.warning, warningInitialText);
 
           fnAppendResultToTable(result);
         }
@@ -140,5 +155,20 @@ j 2500</textarea>
                 "<td>" + item.hexa + "</td>" + 
              "</tr>";
     }
+
+    function fnCleanCode(){
+      $("#iTaxArea").val("");
+    }
+
+    function fnSampleText(){
+      $.ajax({
+        type: 'GET',
+        url: '/sampletext',            
+        success: function(result) {
+          $("#iTaxArea").val(result.val);
+        }
+      });
+    }
+
   </script>
 </html>
