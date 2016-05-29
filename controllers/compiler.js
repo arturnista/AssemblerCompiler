@@ -1,7 +1,10 @@
 var dic = require('./dictionary.js');
 var tm = require('./throwMessages.js');
 
+var labels = [];
+
 exports.compile = function (data, fnCallback) {
+    createLabels(data);
     result = {
         data: []
     }
@@ -9,8 +12,12 @@ exports.compile = function (data, fnCallback) {
     for (var i = 0; i < data.length; i++) {
         try{
             var oriLine = data[i].line;
+
             if(oriLine == "")
                 continue;
+            if(oriLine.charAt(0) == ":")
+                continue;
+
             var line = interpretLine(data[i].line);
             result.data.push(line);
         } catch(err){
@@ -21,6 +28,30 @@ exports.compile = function (data, fnCallback) {
         }
     }
     fnCallback(result, error);
+}
+
+createLabels = function(data){
+    labels = [];
+    for (var i = 0; i < data.length; i++) {
+        var oriLine = data[i].line;
+        if(oriLine.charAt(0) === ":"){
+            var label = oriLine.substring(1, oriLine.length);
+            var line = i + 1;
+            labels.push({
+                name: label,
+                line: line
+            });
+        }
+    }
+}
+
+findLabel = function(label){
+    for (var i = 0; i < labels.length; i++) {
+        if(label === labels[i].name){
+            return labels[i].line;
+        }
+    }
+    throw "Label '" + label + "' não existente.";
 }
 
 interpretLine = function(line){
@@ -87,6 +118,8 @@ iFuncInterpret = function(original, addFunc){
     var funcData;
     if(addFunc[0] === "lw" || addFunc[0] === 'sw'){
         funcData = iFuncInterpretW(set, addFunc);
+    } else if (addFunc[0] === "beq"){
+        funcData = iFuncInterpretJump(set, addFunc);
     } else {
         funcData = iFuncInterpretNormal(set, addFunc);
     }
@@ -119,6 +152,28 @@ iFuncInterpretW = function(set, addFunc){
         op : set.op,
         variable1 : dic.variableValue(data[1]),
         variable2 : parseInt(data[0]),
+        returnVar : dic.variableValue(addFunc[1])
+    }
+
+    return funcData;
+}
+
+iFuncInterpretJump = function(set, addFunc){
+    if(addFunc.length > 4){
+        throw ("Número de variáveis errado. Esperando 3 variáveis.");
+    }
+
+    var line;
+    try{
+        line = findLabel(addFunc[3]);
+    } catch(err){
+        throw (err);
+    }
+
+    var funcData = {
+        op : set.op,
+        variable1 : dic.variableValue(addFunc[2]),
+        variable2 : line,
         returnVar : dic.variableValue(addFunc[1])
     }
 
@@ -172,7 +227,7 @@ jFuncInterpret = function(original, addFunc){
         throw ("Immediate informado não é um número");
     }
     var ind = parseInt(addFunc[1]);
-    if(ind > Math.pow(2, 26)){
+    if(Math.abs(ind) > Math.pow(2, 15)){
         throw ("Immediate informado é maior que 26bits.");
     }
 
@@ -192,8 +247,14 @@ jFuncInterpret = function(original, addFunc){
 }
 
 jFuncDataToBinary = function(d){
+    var im = dec2bin(d.returnVar);
+    // Necessary because javascript works with 32bits variables
+    if(d.returnVar < 0){
+        var strNum = "" + dec2bin(d.returnVar);
+        im = strNum.substring(5,31);
+    }
     return pad(dec2bin(d.op), 6) +
-           pad(dec2bin(d.returnVar), 26);
+           pad(im, 26);
 }
 
 jFuncDataToHexa = function(d){
