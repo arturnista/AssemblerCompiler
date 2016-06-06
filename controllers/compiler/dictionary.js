@@ -106,6 +106,12 @@ exports.opShamtFunc = function(val){
         case "sw":
             res.op = 43;
             break;
+        case "beq":
+            res.op = 4;
+            break;
+        case "j":
+            res.op = 2;
+            break;
     }
     return res;
 }
