@@ -216,7 +216,7 @@ iFuncInterpretNormal = function(set, addFunc){
     }
     var im = parseInt(addFunc[3]);
     if(im >= Math.pow(2,15)){
-        throw ("Valor maior que 26 bits.");
+        throw ("Valor maior que 16 bits.");
     }
     var funcData = {
         op : set.op,
@@ -254,8 +254,8 @@ jFuncInterpret = function(original, addFunc){
         throw ("Immediate informado não é um número");
     }
     var ind = parseInt(addFunc[1]);
-    if(Math.abs(ind) > Math.pow(2, 15)){
-        throw ("Immediate informado é maior que 26bits.");
+    if(Math.abs(ind) > Math.pow(2, 25)){
+        throw ("Immediate informado é maior que 26 bits.");
     }
 
     var set = dic.opShamtFunc(addFunc[0]);
