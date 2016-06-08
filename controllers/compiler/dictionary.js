@@ -5,6 +5,9 @@ exports.variableValue = function(variable){
     if(variable.charAt(0) != '$'){
         throw (err);
     }
+    if(variable.length > 3){
+        throw (err);
+    }
     switch(variable){
         case '$0':
             return 0;
@@ -28,8 +31,9 @@ exports.variableValue = function(variable){
             return 31;
             break;
     }
-    if(isNaN(variable.charAt(2)))
+    if(isNaN(variable.charAt(2))){
         throw (err);
+    }
     var nm = parseInt(variable.charAt(2));
     switch(variable.charAt(1)){
         case 'v':
@@ -62,6 +66,7 @@ exports.variableValue = function(variable){
             return 16 + nm;
             break;
         default:
+            console.log("Cathcou?")
             throw (err);
             break;
     }
