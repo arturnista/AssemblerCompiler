@@ -6,9 +6,6 @@ http://assemblercompiler.herokuapp.com/
 ***
 <b>Developed by</b>: 
 * Artur Morelle Nista
-* Daniel De Carvalho Figueiredo
-* Luciano Zuccolotto de Souza
-* Victor E. Scherer 
 
 ***
 
